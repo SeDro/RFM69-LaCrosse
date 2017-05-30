@@ -1,12 +1,12 @@
 # RFM69-LaCrosse
 ## Short Description
 This is a c++ application for recieving data from La Crosse ( TX29 , TX35 , ...) sensor with an RFM69 directly wired to an Raspberry Pi.
-The sensors can be found at [lacrossetechnology.com/](http://www.lacrossetechnology.com/)
+The sensors can be found at [lacrossetechnology.com](http://www.lacrossetechnology.com/)
 The recieved data is provided via TCP sockect on port 8888.
 
 ## Credits
 The code of this application is inspired from [rfm69-library-for-raspberry-pi](http://rdepablos.merlitec.com/mixed/rfm69-library-for-raspberry-pi) which bases on [LowPowerLab/RFM69](https://github.com/LowPowerLab/RFM69).
-It also uses [wiringpi Library] (http://wiringpi.com/)
+It also uses [wiringpi Library](http://wiringpi.com/)
 
 ## Usage
 The application can be used like this:
@@ -33,4 +33,5 @@ which means:
 - 11.406405 absolute humidity (calculated from sensor values)
 
 If there is no data for the desired sensor number the response will contain the desired number and a statement that this ID was not found.
+
 After the response the tcp connection will be closed.
