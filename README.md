@@ -1,6 +1,6 @@
 # RFM69-LaCrosse
 ## Short Description
-This is a c++ application for recieving data from La Crosse ( TX29 , TX35 , ...) sensor with an RFM69 directly wired to an Raspberry Pi.
+This is a c++ application for recieving data from La Crosse ( TX29DTH , TX35DTH , ...) sensor with an RFM69 directly wired to an Raspberry Pi.
 The sensors can be found at [lacrossetechnology.com](http://www.lacrossetechnology.com/)
 The recieved data is provided via TCP sockect on port 8888.
 
@@ -14,9 +14,9 @@ The application can be used like this:
 sensor_supply [mode [toggle_time]]
 
 where mode can either be:
-* TX29 which will only recieve data of TX29 sensors
-* TX35 which will only recieve data of this sensors
-* toggle where the application will automatically toggle between TX29 and TX35
+* TX29 which will only recieve data of TX29-IT sensors (TX29U-IT and TX29UDTH-IT)
+* TX35 which will only recieve data of TX35-IT sensors (TX35U-IT and TX35UDTH-IT)
+* toggle where the application will automatically toggle between TX29DTH-IT and TX35DTH-IT
 
 In toggle mode it's possible to define the toggle interval in seconds. Default toggle interval is 15 seconds.
 
