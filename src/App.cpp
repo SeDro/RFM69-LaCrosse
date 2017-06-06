@@ -150,36 +150,40 @@ int Application::serveData(Registry * registry, FrameList * list) {
 void Application::serveConnection(Registry * registry, FrameList * list, int socket) {
 	char buffer[10];
 	
-	bzero(buffer, 10);
-	read(socket, buffer, 9);
+	try {
+		bzero(buffer, 10);
+		read(socket, buffer, 9);
 	
-	string str = buffer;
-	transform(str.begin(), str.end(),str.begin(), ::toupper);
-	string stop = STOP;
-	transform(stop.begin(), stop.end(),stop.begin(), ::toupper);
-	if(str.length() >= stop.length() && std::equal(stop.begin(), stop.end(), str.begin())) {
-		registry->setValue(STOP, YES);
-	}
-	else {
-		int tmp = strtol (str.data(),nullptr,0);
-		Frame * requestedFrame = list->getFrame(tmp);
-		if(requestedFrame != NULL) {
-			writeToSocket(socket, requestedFrame->NewBatteryFlag == true ? "TRUE" : "FALSE");
-			writeToSocket(socket, requestedFrame->Bit12 == true ? "TRUE" : "FALSE");
-			snprintf(buffer, 10, "%.1f", requestedFrame->Temperature);
-			writeToSocket(socket, buffer);
-			writeToSocket(socket, requestedFrame->WeakBatteryFlag == true ? "TRUE" : "FALSE");
-			snprintf(buffer, 10, "%02i\%", requestedFrame->Humidity);
-			writeToSocket(socket, buffer);
-			snprintf(buffer, 10, "%f", requestedFrame->HumidityAbs);
-			writeToSocket(socket, buffer);
- 		}
+		string str = buffer;
+		transform(str.begin(), str.end(),str.begin(), ::toupper);
+		string stop = STOP;
+		transform(stop.begin(), stop.end(),stop.begin(), ::toupper);
+		if(str.length() >= stop.length() && std::equal(stop.begin(), stop.end(), str.begin())) {
+			registry->setValue(STOP, YES);
+		}
 		else {
-			writeToSocket(socket, str);
-			writeToSocket(socket, "ID not found");
-   		}
+			int tmp = strtol (str.data(),nullptr,0);
+			Frame * requestedFrame = list->getFrame(tmp);
+			if(requestedFrame != NULL) {
+				writeToSocket(socket, requestedFrame->NewBatteryFlag == true ? "TRUE" : "FALSE");
+				writeToSocket(socket, requestedFrame->Bit12 == true ? "TRUE" : "FALSE");
+				snprintf(buffer, 10, "%.1f", requestedFrame->Temperature);
+				writeToSocket(socket, buffer);
+				writeToSocket(socket, requestedFrame->WeakBatteryFlag == true ? "TRUE" : "FALSE");
+				snprintf(buffer, 10, "%02i\%", requestedFrame->Humidity);
+				writeToSocket(socket, buffer);
+				snprintf(buffer, 10, "%f", requestedFrame->HumidityAbs);
+				writeToSocket(socket, buffer);
+ 			}
+			else {
+				writeToSocket(socket, str);
+				writeToSocket(socket, "ID not found");
+   			}
+		}
+		close(socket);
+	} catch (exception& e) {
+		cout << "Exception during serveConnection: " << e.what() << endl;
 	}
-	close(socket);
 }
 
 void Application::writeToSocket(int socket, string msg) {
