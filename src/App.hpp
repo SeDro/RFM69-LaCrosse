@@ -16,7 +16,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
-
+#include <exception>
 
 #define INITIAL_DATARATE_TX29 17241
 #define INITIAL_DATARATE_TX35 9579
