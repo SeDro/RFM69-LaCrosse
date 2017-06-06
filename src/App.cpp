@@ -81,6 +81,7 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 
 int Application::run(int argc, char* argv[]) {
 
+	cout << "Application starts" << endl;
 	decodeParams(argc, argv);
 	
 	std::thread collecting(collectDataFrames, &sensor, &registry, &list);
@@ -136,10 +137,10 @@ int Application::serveData(Registry * registry, FrameList * list) {
 		}
 		try {
 			std::thread handleConnection(serveConnection, registry, list, newsockfd);
+			handleConnection.detach();
 		} catch (exception& e) {
 			cout << "Exception during creating new thread: " << e.what() << endl;
 		}
-		handleConnection.detach();
 		stop = registry->getValue(STOP);
 	}
 	close(sockfd);
