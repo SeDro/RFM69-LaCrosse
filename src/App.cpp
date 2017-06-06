@@ -129,11 +129,16 @@ int Application::serveData(Registry * registry, FrameList * list) {
 				continue;
 			}
 			else {
+				cout << "Error at accepting new connection. Errno: " << errno << endl;
 				registry->setValue(STOP, YES);
 				return -3;
 			}
 		}
-		std::thread handleConnection(serveConnection, registry, list, newsockfd);
+		try {
+			std::thread handleConnection(serveConnection, registry, list, newsockfd);
+		} catch (exception& e) {
+			cout << "Exception during creating new thread: " << e.what() << endl;
+		}
 		handleConnection.detach();
 		stop = registry->getValue(STOP);
 	}
