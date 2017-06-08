@@ -1,8 +1,11 @@
 #ifndef Frame_h
 #define Frame_h
 #include <stdio.h>
+#include <iostream>
 
 #define FRAME_LENGTH 5
+
+using namespace std;
 
 class Frame {
 	public:
@@ -16,6 +19,7 @@ class Frame {
 		unsigned char  CRC;
 		double HumidityAbs;
 		static Frame * decodeFrame(unsigned char *bytes);
+		~Frame();
 	protected:
 		static unsigned char CalculateCRC(unsigned char *data, unsigned char len);
 		Frame();

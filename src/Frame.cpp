@@ -26,7 +26,7 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 
 		frame->Header = (bytes[0] & 0xF0) >> 4;
 		if (frame->Header != 9) {
-			delete[] frame;
+			delete frame;
 		}
 		else {
 			frame->CRC = bytes[4];
@@ -65,4 +65,8 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 }
 
 Frame::Frame() {
+}
+
+Frame::~Frame() {
+	cout << "Frame deleted" << endl;
 }
