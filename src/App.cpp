@@ -37,7 +37,7 @@ void Application::toggleDataRate(RFM_SENSOR * sensor) {
 }
 
 void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, FrameList * list) {
-	try {
+//	try {
 	unsigned char received[PAYLOADSIZE];
 	int toggle_nr = 0;
 	clock_t startClock, endClock;
@@ -78,12 +78,12 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 		pause.tv_nsec = CYCLE_TIME * 1000000L - (endClock - startClock) * 1000;
 		nanosleep(&pause, (struct timespec *)NULL);
 	}
-	} catch (exception& e) {
+/*	} catch (exception& e) {
 		cout << "Exception during collectDataFrames: " << e.what() << endl;
 	} catch (...) {
 		cout << "undefined exception in collectDataFrames" << endl;
 	}
-}
+*/}
 
 int Application::run(int argc, char* argv[]) {
 
@@ -101,7 +101,7 @@ int Application::run(int argc, char* argv[]) {
 
 int Application::serveData(Registry * registry, FrameList * list) {
 	
-	try {
+//	try {
 	int sockfd, newsockfd, portno, pid;
 	socklen_t clilen;
 	struct sockaddr_in serv_addr, cli_addr;
@@ -143,26 +143,26 @@ int Application::serveData(Registry * registry, FrameList * list) {
 				return -3;
 			}
 		}
-		try {
+//		try {
 			std::thread handleConnection(serveConnection, registry, list, newsockfd);
 			handleConnection.detach();
-		} catch (exception& e) {
+/*		} catch (exception& e) {
 			cout << "Exception during creating new thread: " << e.what() << endl;
 		}
-		stop = registry->getValue(STOP);
+*/		stop = registry->getValue(STOP);
 	}
 	close(sockfd);
 	return 0;
-	}catch (...) {
+/*	}catch (...) {
 		cout << "undefined exception in serveData" << endl;
 	}
-}
+*/}
 
 
 void Application::serveConnection(Registry * registry, FrameList * list, int socket) {
 	char buffer[10];
 	
-	try {
+//	try {
 		bzero(buffer, 10);
 		read(socket, buffer, 9);
 	
@@ -193,12 +193,12 @@ void Application::serveConnection(Registry * registry, FrameList * list, int soc
    			}
 		}
 		close(socket);
-	} catch (exception& e) {
+/*	} catch (exception& e) {
 		cout << "Exception during serveConnection: " << e.what() << endl;
 	} catch (...) {
 		cout << "undefined exception in serveConnection" << endl;
 	}
-}
+*/}
 
 void Application::writeToSocket(int socket, string msg) {
 	write(socket, msg.data(), msg.size());

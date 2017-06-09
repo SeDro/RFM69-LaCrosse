@@ -14,7 +14,7 @@ void FrameList::addFrame(Frame * theFrame) {
 		for(int i = 0; i < capacity; i++) {
 			theNewList[i] = theList[i];
 		}
-		delete[] theList;
+		delete theList;
 		theList = theNewList;
 		theList[capacity] = theFrame;
 		capacity++;
