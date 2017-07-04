@@ -3,7 +3,6 @@ CFLAGS = -std=c++11
 LDFLAGS = -lwiringPi -pthread
 
 BIN = sensor_supply
-TEST = get_values
 BIN_DIRCETORY = bin
 OBJ_DIRECTORY = obj
 SRC_DIRECTORY = src
@@ -15,11 +14,14 @@ SOURCES = $(shell find $(SRC_DIRECTORY) -type f -name *.$(SRCEXT))
 OBJECTS = $(patsubst $(SRC_DIRECTORY)/%,$(OBJ_DIRECTORY)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 all: binary tests
 
-tests: test_directories $(OBJECTS) get_values
+tests: test_directories $(OBJECTS) get_values extract_values
 
 get_values: $(OBJ_DIRECTORY)/$(TST_DIRECTORY)/get_values.o $(OBJ_DIRECTORY)/RFM_SENSOR.o $(OBJ_DIRECTORY)/Frame.o
-	$(CC) $(CFLAGS) -o $(BIN_DIRCETORY)/$(TST_DIRECTORY)/$(TEST) $^ $(LDFLAGS)
-
+	$(CC) $(CFLAGS) -o $(BIN_DIRCETORY)/$(TST_DIRECTORY)/$@ $^ $(LDFLAGS)
+	
+extract_values: $(OBJ_DIRECTORY)/$(TST_DIRECTORY)/extract_values.o $(OBJ_DIRECTORY)/Frame.o
+	$(CC) $(CFLAGS) -o $(BIN_DIRCETORY)/$(TST_DIRECTORY)/$@ $^ $(LDFLAGS)
+	
 $(OBJ_DIRECTORY)/$(TST_DIRECTORY)/%.$(OBJEXT): $(TST_DIRECTORY)/%.$(SRCEXT)
 	$(CC) $(CFLAGS) -c $< -o $@ -I./$(INC_DIRECTORY)
 

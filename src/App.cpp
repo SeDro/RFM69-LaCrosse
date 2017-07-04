@@ -62,6 +62,7 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 			Frame * frame = Frame::decodeFrame(received);
 			if(frame != NULL) {
 				list->addFrame(frame);
+				frame = NULL;
 			}
 			sensor->setMode(RF69_MODE_RX);
 		}
@@ -186,6 +187,7 @@ void Application::serveConnection(Registry * registry, FrameList * list, int soc
 				writeToSocket(socket, buffer);
 				snprintf(buffer, 10, "%f", requestedFrame->HumidityAbs);
 				writeToSocket(socket, buffer);
+				requestedFrame = NULL;
  			}
 			else {
 				writeToSocket(socket, str);

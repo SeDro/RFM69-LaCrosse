@@ -21,7 +21,8 @@ void FrameList::addFrame(Frame * theFrame) {
 	}
 	else {
 		cout << "Delete Frame" << endl;
-		delete theList[tmp];
+		Frame * tmp_ptr = theList[tmp];
+		delete tmp_ptr;
 		theList[tmp] = theFrame;
 		cout << "Deletion finished" << endl;
 	}
