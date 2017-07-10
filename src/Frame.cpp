@@ -64,6 +64,18 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
   return frame;
 }
 
+void Frame::updateFrame(Frame* newFrame) {
+	this->Header = newFrame->Header;
+	this->CRC = newFrame->CRC;
+	this->ID = newFrame->ID;
+	this->NewBatteryFlag = newFrame->NewBatteryFlag;
+	this->Bit12 = newFrame->Bit12;
+	this->Temperature = newFrame->Temperature;
+	this->WeakBatteryFlag = newFrame->WeakBatteryFlag;
+	this->Humidity = newFrame->Humidity;
+	this->HumidityAbs = newFrame->HumidityAbs;
+}
+
 Frame::Frame() {
 }
 

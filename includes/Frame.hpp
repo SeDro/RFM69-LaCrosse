@@ -1,5 +1,6 @@
 #ifndef Frame_h
 #define Frame_h
+#include "BaseFrame.hpp"
 #include <stdio.h>
 #include <iostream>
 
@@ -7,10 +8,8 @@
 
 using namespace std;
 
-class Frame {
+class Frame : public BaseFrame {
 	public:
-	    unsigned char  Header;
-		unsigned char  ID;
 		unsigned char  NewBatteryFlag;
 		unsigned char  Bit12;
 		float Temperature;
@@ -20,6 +19,7 @@ class Frame {
 		double HumidityAbs;
 		static Frame * decodeFrame(unsigned char *bytes);
 		~Frame();
+		virtual void updateFrame(Frame* newFrame);
 	protected:
 		static unsigned char CalculateCRC(unsigned char *data, unsigned char len);
 		Frame();

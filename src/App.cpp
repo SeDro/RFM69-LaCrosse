@@ -176,7 +176,7 @@ void Application::serveConnection(Registry * registry, FrameList * list, int soc
 		}
 		else {
 			int tmp = strtol (str.data(),nullptr,0);
-			Frame * requestedFrame = list->getFrame(tmp);
+			Frame * requestedFrame = (Frame*)list->getFrame(tmp);
 			if(requestedFrame != NULL) {
 				writeToSocket(socket, requestedFrame->NewBatteryFlag == true ? "TRUE" : "FALSE");
 				writeToSocket(socket, requestedFrame->Bit12 == true ? "TRUE" : "FALSE");

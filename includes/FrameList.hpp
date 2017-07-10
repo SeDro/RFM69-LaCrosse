@@ -9,11 +9,11 @@ using namespace std;
 
 class FrameList {
 	public:
-		void addFrame(Frame * newFrame);
-		Frame * getFrame(unsigned char ID);
+		void addFrame(BaseFrame * newFrame);
+		BaseFrame * getFrame(unsigned char ID);
 		FrameList();
 	protected:
-		Frame** theList;
+		BaseFrame** theList = NULL;
 		int capacity;
 		int findFrame(unsigned char ID);
 		std::mutex internal_mutex;
