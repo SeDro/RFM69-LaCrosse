@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	uniform_int_distribution<int> distribution(0,255);
 	uniform_int_distribution<int> distribution2(0,255);
 
-	for (long long i = 0; i < 1000; i++) {
+	for (long long i = 0; i < 10000; i++) {
 		unsigned char ID = distribution(generator);
 		unsigned char Header = distribution2(generator2);
 		BaseFrame* theFrame = new BaseFrame();

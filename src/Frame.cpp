@@ -64,19 +64,23 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
   return frame;
 }
 
-void Frame::updateFrame(Frame* newFrame) {
-	this->Header = newFrame->Header;
-	this->CRC = newFrame->CRC;
-	this->ID = newFrame->ID;
-	this->NewBatteryFlag = newFrame->NewBatteryFlag;
-	this->Bit12 = newFrame->Bit12;
-	this->Temperature = newFrame->Temperature;
-	this->WeakBatteryFlag = newFrame->WeakBatteryFlag;
-	this->Humidity = newFrame->Humidity;
-	this->HumidityAbs = newFrame->HumidityAbs;
+void Frame::updateFrame(BaseFrame* newFrame) {
+	cout << "updating Frame" << endl;
+	BaseFrame::updateFrame(newFrame);
+	Frame* tmp = dynamic_cast<Frame*>(newFrame);
+	if(tmp != NULL) {
+		this->CRC = tmp->CRC;
+		this->NewBatteryFlag = tmp->NewBatteryFlag;
+		this->Bit12 = tmp->Bit12;
+		this->Temperature = tmp->Temperature;
+		this->WeakBatteryFlag = tmp->WeakBatteryFlag;
+		this->Humidity = tmp->Humidity;
+		this->HumidityAbs = tmp->HumidityAbs;
+	}
 }
 
 Frame::Frame() {
+	cout << "Frame created" << endl;
 }
 
 Frame::~Frame() {
