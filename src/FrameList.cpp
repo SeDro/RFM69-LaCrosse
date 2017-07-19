@@ -48,7 +48,7 @@ int FrameList::findFrame(unsigned char ID) {
 }
 
 BaseFrame * FrameList::getFrame(unsigned char ID) {
-	BaseFrame* ret_val = NULL;
+	BaseFrame* ret_val = nullptr;
 	internal_mutex.lock();
 	int tmp = findFrame(ID);
 	if(tmp != -1) {

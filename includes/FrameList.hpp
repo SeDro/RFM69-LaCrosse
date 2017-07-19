@@ -13,7 +13,7 @@ class FrameList {
 		BaseFrame * getFrame(unsigned char ID);
 		FrameList();
 	protected:
-		BaseFrame** theList = NULL;
+		BaseFrame** theList = nullptr;
 		int capacity;
 		int findFrame(unsigned char ID);
 		std::mutex internal_mutex;

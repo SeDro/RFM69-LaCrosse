@@ -40,7 +40,7 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 //	try {
 	unsigned char received[PAYLOADSIZE];
 	int toggle_nr = 0;
-	clock_t startClock, endClock;
+//	clock_t startClock, endClock;
 	struct timespec pause = {0};
 	
 	unsigned long initialRate = INITIAL_DATARATE_TX29;
@@ -55,14 +55,14 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 	
 	string stop = registry->getValue(STOP);
 	while(stop.empty() || stop != YES) {
-		startClock = clock();
+//		startClock = clock();
 		if(sensor->receiveData() == true) {
 			sensor->setMode(RF69_MODE_STANDBY);
 			sensor->getData(received);
 			Frame * frame = Frame::decodeFrame(received);
-			if(frame != NULL) {
+			if(frame != nullptr) {
 				list->addFrame(frame);
-				frame = NULL;
+				frame = nullptr;
 			}
 			sensor->setMode(RF69_MODE_RX);
 		}
@@ -74,10 +74,10 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 		}
 	
 		stop = registry->getValue(STOP);
-		endClock = clock();
+//		endClock = clock();
 	
-		pause.tv_nsec = CYCLE_TIME * 1000000L - (endClock - startClock) * 1000;
-		nanosleep(&pause, (struct timespec *)NULL);
+		pause.tv_nsec = 50000000;//CYCLE_TIME * 1000000L - (endClock - startClock) * 1000;
+		nanosleep(&pause, (struct timespec *)nullptr);
 	}
 /*	} catch (exception& e) {
 		cout << "Exception during collectDataFrames: " << e.what() << endl;
@@ -91,10 +91,12 @@ int Application::run(int argc, char* argv[]) {
 	cout << "Application starts" << endl;
 	decodeParams(argc, argv);
 	
-	std::thread collecting(collectDataFrames, &sensor, &registry, &list);
+//	std::thread collecting(collectDataFrames, &sensor, &registry, &list);
 	std::thread serving(serveData, &registry, &list);
 	
-	collecting.join();
+	collectDataFrames(&sensor, &registry, &list);
+	
+//	collecting.join();
 	serving.join();
 	
 	return 0;
@@ -134,7 +136,7 @@ int Application::serveData(Registry * registry, FrameList * list) {
 			if(errno == EAGAIN || errno == EWOULDBLOCK) {
 				struct timespec pause = {0};
 				pause.tv_nsec = 1000000L;
-				nanosleep(&pause, (struct timespec *)NULL);
+				nanosleep(&pause, (struct timespec *)nullptr);
 				stop = registry->getValue(STOP);
 				continue;
 			}
@@ -177,7 +179,7 @@ void Application::serveConnection(Registry * registry, FrameList * list, int soc
 		else {
 			int tmp = strtol (str.data(),nullptr,0);
 			Frame * requestedFrame = (Frame*)list->getFrame(tmp);
-			if(requestedFrame != NULL) {
+			if(requestedFrame != nullptr) {
 				writeToSocket(socket, requestedFrame->NewBatteryFlag == true ? "TRUE" : "FALSE");
 				writeToSocket(socket, requestedFrame->Bit12 == true ? "TRUE" : "FALSE");
 				snprintf(buffer, 10, "%.1f", requestedFrame->Temperature);
@@ -187,7 +189,7 @@ void Application::serveConnection(Registry * registry, FrameList * list, int soc
 				writeToSocket(socket, buffer);
 				snprintf(buffer, 10, "%f", requestedFrame->HumidityAbs);
 				writeToSocket(socket, buffer);
-				requestedFrame = NULL;
+				requestedFrame = nullptr;
  			}
 			else {
 				writeToSocket(socket, str);
