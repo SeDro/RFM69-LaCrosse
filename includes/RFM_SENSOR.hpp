@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include "mraa.hpp"
 
 #define RF69_MODE_SLEEP       0 // XTAL OFF
 #define	RF69_MODE_STANDBY     1 // XTAL ON
@@ -17,6 +18,7 @@ class RFM_SENSOR
 {
 	public:
 		RFM_SENSOR(void);
+		~RFM_SENSOR(void);
 		int initializeSensor(unsigned long freq, unsigned long  data_rate);
 		void setMode(char newMode);
 		bool receiveData(void);
@@ -36,5 +38,6 @@ class RFM_SENSOR
 		char DATA[PAYLOADSIZE];
 		unsigned long m_dataRate;
 		unsigned long m_frequency;
+		mraa::Spi* spi = nullptr;
 };
 #endif

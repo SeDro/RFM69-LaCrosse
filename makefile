@@ -1,6 +1,6 @@
 CC      = /usr/bin/g++
 CFLAGS = -std=c++11
-LDFLAGS = -lwiringPi -pthread
+LDFLAGS = -lmraa -pthread
 
 BIN = sensor_supply
 BIN_DIRCETORY = bin
