@@ -27,7 +27,7 @@ int RFM_SENSOR::initializeSensor(unsigned long freq, unsigned long  data_rate) {
     exit(1);
   }
   
-  if(spi->mode(mraa::SPI_MODE0) != mraa::SUCCESS || spi->frequency(SPI_SPEED) != mraa::SUCCESS || spi->bitPerWord(8) != mraa::SUCCESS) {
+  if(spi->mode(mraa::SPI_MODE0) != mraa::SUCCESS || spi->frequency(SPI_SPEED) != mraa::SUCCESS || spi->bitPerWord(8) != mraa::SUCCESS || spi->lsbmode(0) != mraa::SUCCESS) {
     printf("Error in setting SPI device parameters\n\r");
     exit(1);
   }
