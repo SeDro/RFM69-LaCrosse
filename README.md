@@ -20,17 +20,17 @@ where mode can either be:
 In toggle mode it's possible to define the toggle interval in seconds. Default toggle interval is 15 seconds.
 
 If -s is set hostname defines where to send recieved data from the sensors as JSON via HTTP POST command. The JSON look's as follows:
-{
-	"ID" : "%d",
-	"TYPE" : "Humidity/Temp",
-	"DIRECTION" : "Input",
-	"New_Battery" : "%s",
-	"Bit12" : "%s",
-	"Temp" : "%.1f",
-	"Weak_Battery" : "%s",
-	"Humidity" : "%02i%",
-	"Humidity_Abs" : "%10f"
-}
+<br>{
+<br>&emsp;"ID" : "%d",
+<br>&emsp;"TYPE" : "Humidity/Temp",
+<br>&emsp;"DIRECTION" : "Input",
+<br>&emsp;"New_Battery" : "%s",
+<br>&emsp;"Bit12" : "%s",
+<br>&emsp;"Temp" : "%.1f",
+<br>&emsp;"Weak_Battery" : "%s",
+<br>&emsp;"Humidity" : "%02i%",
+<br>&emsp;"Humidity_Abs" : "%10f"
+<br>}
 
 Recieved data from 1 or more sensors it can be read via TCP connection on port 8888. Once the connection is established application waits for the sensor number which data is desired. Sensor number has to be supplied in decimal.
 
