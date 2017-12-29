@@ -26,7 +26,7 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 
 		frame->Header = (bytes[0] & 0xF0) >> 4;
 		if (frame->Header != 9) {
-			cout << "wrong header " << frame->Header <<endl;
+//			cout << "wrong header " << frame->Header <<endl;
 			delete frame;
 			frame = nullptr;
 		}
@@ -63,18 +63,18 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 			frame->HumidityAbs = 216.687*dd/(273.15+frame->Temperature);
 		}
 	} else {
-		cout << "wrong CRC" << endl;
+//		cout << "wrong CRC" << endl;
 	}
   return frame;
 }
 
 void Frame::updateFrame(BaseFrame* newFrame) {
-	cout << "updating Frame " << (unsigned int)this->ID << endl;
+//	cout << "updating Frame " << (unsigned int)this->ID << endl;
 	BaseFrame::updateFrame(newFrame);
-	cout << "updating BaseFrame finished" << endl;
+//	cout << "updating BaseFrame finished" << endl;
 	Frame* tmp = dynamic_cast<Frame*>(newFrame);
 	if(tmp != nullptr) {
-		cout << "update Frame data" << endl;
+//		cout << "update Frame data" << endl;
 		this->CRC = tmp->CRC;
 		this->NewBatteryFlag = tmp->NewBatteryFlag;
 		this->Bit12 = tmp->Bit12;
@@ -82,14 +82,14 @@ void Frame::updateFrame(BaseFrame* newFrame) {
 		this->WeakBatteryFlag = tmp->WeakBatteryFlag;
 		this->Humidity = tmp->Humidity;
 		this->HumidityAbs = tmp->HumidityAbs;
-		cout << "update Frame data finished" << endl;
+//		cout << "update Frame data finished" << endl;
 	}
 }
 
 Frame::Frame() {
-	cout << "Frame created" << endl;
+//	cout << "Frame created" << endl;
 }
 
 Frame::~Frame() {
-	cout << "Frame deleted" << endl;
+//	cout << "Frame deleted" << endl;
 }

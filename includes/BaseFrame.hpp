@@ -6,18 +6,18 @@ using namespace std;
 
 class BaseFrame {
 	public:
-	    unsigned char  Header;
-		unsigned char  ID;
+	    unsigned char  Header = 0;
+		unsigned char  ID = 0;
 		virtual void updateFrame(BaseFrame* newFrame) {
 			this->Header = newFrame->Header;
 			this->ID = newFrame->ID;
 		}
 		BaseFrame() {
-			cout << "BaseFrame created" << endl;
+//			cout << "BaseFrame created" << endl;
 		}
 		
 		virtual ~BaseFrame() {
-			cout << "Base deleted" << endl;
+//			cout << "Base deleted" << endl;
 		}
 };
 #endif

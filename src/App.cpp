@@ -1,26 +1,39 @@
 #include "App.hpp"
 
 void Application::decodeParams(int argc, char* argv[]) {
-	if(argc == 1) {
-		registry.setValue(MODE, TOGGLE_MODE);
-		registry.setValue(TOGGLE_TIME, DEFAULT_TOGGLE_TIME);
-	}
-	else {
-		string str = argv[1];
+	registry.setValue(MODE, TOGGLE_MODE);
+	registry.setValue(TOGGLE_TIME, DEFAULT_TOGGLE_TIME);
+
+	for(int i = 1; i < argc; i++) {
+		string str = argv[i];
 		transform(str.begin(), str.end(),str.begin(), ::toupper);
 		if(str == TX29_MODE) {
+			cout << MODE << " == " << TX29_MODE <<endl;
 			registry.setValue(MODE, TX29_MODE);
 		}
 		else if(str == TX35_MODE) {
+			cout << MODE << " == " << TX35_MODE <<endl;
 			registry.setValue(MODE, TX35_MODE);
 		}
-		else {
+		else if(str == TOGGLE_MODE) {
+			cout << MODE << " == " << TOGGLE_MODE <<endl;
 			registry.setValue(MODE, TOGGLE_MODE);
-			if(argc == 2) {
-				registry.setValue(TOGGLE_TIME, DEFAULT_TOGGLE_TIME);
+		}
+		else if(Helper::isNumber(str)) {
+			cout << TOGGLE_TIME << " == " << argv[i] <<endl;
+			registry.setValue(TOGGLE_TIME, argv[i]);
+		}
+		else if(str == SEND_TO_HOST) {
+			registry.setValue(SEND_TO_HOST, YES);
+			cout << SEND_TO_HOST << " is set" << endl;
+			if(i + 1 <= argc) { 
+				i++;
+				cout << HOST << " == " << argv[i] << endl;
+				registry.setValue(HOST, argv[i]);
 			}
 			else {
-				registry.setValue(TOGGLE_TIME, argv[2]);
+				cout << SEND_TO_HOST << " need's a host followed." << endl;
+				exit(-1);
 			}
 		}
 	}
@@ -59,9 +72,16 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 		if(sensor->receiveData() == true) {
 			sensor->setMode(RF69_MODE_STANDBY);
 			sensor->getData(received);
+			char json[1000];
 			Frame * frame = Frame::decodeFrame(received);
 			if(frame != nullptr) {
+//				cout << "try stringify frame" << endl;
+//				cout << "try add frame" << endl;
 				list->addFrame(frame);
+				if(registry->getValue(SEND_TO_HOST) == YES) {
+					Helper::stringifyFrame(frame, json);
+					RestClient::Response r = RestClient::post(registry->getValue(HOST), "application/json", json);
+				}
 				frame = nullptr;
 			}
 			sensor->setMode(RF69_MODE_RX);
@@ -88,7 +108,7 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 
 int Application::run(int argc, char* argv[]) {
 
-	cout << "Application starts" << endl;
+	cout << "Application starts with " << argc << " arguments" << endl;
 	decodeParams(argc, argv);
 	
 //	std::thread collecting(collectDataFrames, &sensor, &registry, &list);

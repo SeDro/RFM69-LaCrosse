@@ -4,6 +4,8 @@
 #include "Frame.hpp"
 #include "Registry.hpp"
 #include "FrameList.hpp"
+#include "Helper.hpp"
+#include "restclient-cpp/restclient.h"
 #include <thread>
 #include <algorithm>
 #include <iostream>
@@ -30,6 +32,8 @@
 #define TOGGLE_TIME "time"
 #define DEFAULT_TOGGLE_TIME "15"
 #define CYCLE_TIME 100
+#define SEND_TO_HOST "-S"
+#define HOST "HOST"
 
 using namespace std;
 

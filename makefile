@@ -1,6 +1,6 @@
 CC      = /usr/bin/g++
 CFLAGS = -std=c++11
-LDFLAGS = -lmraa -pthread
+LDFLAGS = -lmraa -pthread -lrestclient-cpp
 
 BIN = sensor_supply
 BIN_DIRCETORY = bin

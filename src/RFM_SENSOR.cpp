@@ -1,6 +1,6 @@
 #include "RFM_SENSOR.hpp"
 #include "rfm69registers.h"
-#include <wiringPiSPI.h>
+//#include <wiringPiSPI.h>
 #define SPI_SPEED 2000000
 #define SPI_DEVICE 0
 
