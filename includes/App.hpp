@@ -4,6 +4,8 @@
 #include "Frame.hpp"
 #include "Registry.hpp"
 #include "FrameList.hpp"
+#include "Helper.hpp"
+#include "restclient-cpp/restclient.h"
 #include <thread>
 #include <algorithm>
 #include <iostream>
@@ -16,7 +18,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
-
+#include <exception>
 
 #define INITIAL_DATARATE_TX29 17241
 #define INITIAL_DATARATE_TX35 9579
@@ -30,6 +32,8 @@
 #define TOGGLE_TIME "time"
 #define DEFAULT_TOGGLE_TIME "15"
 #define CYCLE_TIME 100
+#define SEND_TO_HOST "-S"
+#define HOST "HOST"
 
 using namespace std;
 

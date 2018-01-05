@@ -1,20 +1,37 @@
 #include "RFM_SENSOR.hpp"
 #include "rfm69registers.h"
-#include <wiringPiSPI.h>
+//#include <wiringPiSPI.h>
 #define SPI_SPEED 2000000
 #define SPI_DEVICE 0
 
 RFM_SENSOR::RFM_SENSOR(void) {
 }
 
+RFM_SENSOR::~RFM_SENSOR(void) {
+  if(spi != nullptr) {
+	  delete spi;
+  }
+}
+
 int RFM_SENSOR::initializeSensor(unsigned long freq, unsigned long  data_rate) {
 
-  // Initialize SPI device 0
-  if(wiringPiSPISetup(SPI_DEVICE, SPI_SPEED) < 0) {
-    printf("Unable to open SPI device\n\r");
+  if(spi != nullptr) {
+    printf("SPI device already initialized\n\r");
     exit(1);
   }
   
+  spi = new mraa::Spi(SPI_DEVICE);
+  
+  if(spi == nullptr) {
+    printf("Error in SPI device initialization\n\r");
+    exit(1);
+  }
+  
+  if(spi->mode(mraa::SPI_MODE0) != mraa::SUCCESS || spi->frequency(SPI_SPEED) != mraa::SUCCESS || spi->bitPerWord(8) != mraa::SUCCESS || spi->lsbmode(0) != mraa::SUCCESS) {
+    printf("Error in setting SPI device parameters\n\r");
+    exit(1);
+  }
+   
   if(!isRFM69()) {
 	  printf("SPI device is no RFM69\n\r");
 	  exit(2);
@@ -65,23 +82,39 @@ int RFM_SENSOR::isRFM69()
 }
 
 void RFM_SENSOR::writeReg(unsigned char addr, unsigned char value) {
-  unsigned char thedata[2];
-  thedata[0] = addr | 0x80;
-  thedata[1] = value;
+  if(spi != nullptr) {
+	unsigned char thedata[2];
+	thedata[0] = addr | 0x80;
+	thedata[1] = value;
 
-  wiringPiSPIDataRW(SPI_DEVICE, thedata, 2);
-  usleep(5);
+	if(spi->transfer(thedata, nullptr, 2) != mraa::SUCCESS) {
+	  printf("Failiure in write on SPI\n\r");
+	  exit(4);
+	}
+	usleep(5);
+  } else {
+	  printf("Trying to write on not initiliazed SPI\n\r");
+	  exit(3);
+  }
 }
 
 unsigned char RFM_SENSOR::readReg(unsigned char addr) {
-  unsigned char thedata[2];
-  thedata[0] = addr & 0x7F;
-  thedata[1] = 0;
+  if(spi != nullptr) {
+	  unsigned char thedata[2];
+	thedata[0] = addr & 0x7F;
+	thedata[1] = 0;
 
-  wiringPiSPIDataRW(SPI_DEVICE, thedata, 2);
-  usleep(5);
+	if(spi->transfer(thedata, thedata, 2) != mraa::SUCCESS) {
+	  printf("Failiure in read from SPI\n\r");
+	  exit(7);
+	}
+	usleep(5);
 
-  return thedata[1];
+	return thedata[1];
+  } else {
+	  printf("Trying to read from not initiliazed SPI\n\r");
+	  exit(6);
+  }
 }
 
 void RFM_SENSOR::setMode(char newMode) {
@@ -122,7 +155,16 @@ void RFM_SENSOR::setDataRate(unsigned long dataRate) {
 
   int r = ((32000000UL + (m_dataRate / 2)) / m_dataRate);
   writeReg(REG_BITRATEMSB, r >> 8);
+  if(readReg(REG_BITRATEMSB) != r >> 8) {
+	  printf("Error in write REG_BITRATEMSB\n\r");
+	  exit(8);
+  }
+  usleep(100000);
   writeReg(REG_BITRATELSB, r & 0xFF);
+  if(readReg(REG_BITRATELSB) != (r & 0xFF)) {
+	  printf("Error in write REG_BITRATELSB value: %d\n\r", r & 0xFF);
+	  exit(9);
+  }
 }
 
 unsigned long RFM_SENSOR::getDataRate() {

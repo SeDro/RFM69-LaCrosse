@@ -4,23 +4,32 @@ FrameList::FrameList() {
 	capacity = 0;
 }
 
-void FrameList::addFrame(Frame * theFrame) {
+void FrameList::addFrame(BaseFrame * theFrame) {
 	internal_mutex.lock();
 	int tmp = findFrame(theFrame->ID);
 	
 	if(tmp == -1) {
-		Frame** theNewList = new Frame*[capacity + 1];
+//		cout << "Increase capacity" << endl;
+		BaseFrame** theNewList = new BaseFrame*[capacity + 1];
 		for(int i = 0; i < capacity; i++) {
 			theNewList[i] = theList[i];
 		}
-		delete[] theList;
+//		cout << "List copied" << endl;
+		delete theList;
+//		cout << "Old list deleted" << endl;
 		theList = theNewList;
+//		cout << "new pointer set" << endl;
 		theList[capacity] = theFrame;
+//		cout << "new frame added" << endl;
 		capacity++;
+//		cout << "capacity increased" << endl;
 	}
 	else {
-		delete[] theList[tmp];
-		theList[tmp] = theFrame;
+//		cout << "Starting Update Frame" << endl;
+		theList[tmp]->updateFrame(theFrame);
+//		cout << "Delete Frame" << endl;
+		delete theFrame;
+//		cout << "Deletion finished" << endl;
 	}
 	
 	internal_mutex.unlock();
@@ -38,8 +47,8 @@ int FrameList::findFrame(unsigned char ID) {
 	return tmp;
 }
 
-Frame * FrameList::getFrame(unsigned char ID) {
-	Frame* ret_val = NULL;
+BaseFrame * FrameList::getFrame(unsigned char ID) {
+	BaseFrame* ret_val = nullptr;
 	internal_mutex.lock();
 	int tmp = findFrame(ID);
 	if(tmp != -1) {
