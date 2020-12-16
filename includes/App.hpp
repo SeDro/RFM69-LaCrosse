@@ -25,6 +25,7 @@
 #define INITIAL_FREQUENCY 868300
 #define STOP "stop"
 #define YES "yes"
+#define NO "NO"
 #define MODE "mode"
 #define TX29_MODE "TX29"
 #define TX35_MODE "TX35"
@@ -34,6 +35,8 @@
 #define CYCLE_TIME 100
 #define SEND_TO_HOST "-S"
 #define HOST "HOST"
+#define VERBOSE_MODE "-V"
+#define VERBOSE "verbose"
 
 using namespace std;
 

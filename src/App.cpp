@@ -3,6 +3,9 @@
 void Application::decodeParams(int argc, char* argv[]) {
 	registry.setValue(MODE, TOGGLE_MODE);
 	registry.setValue(TOGGLE_TIME, DEFAULT_TOGGLE_TIME);
+	registry.setValue(VERBOSE, NO);
+	registry.setValue(SEND_TO_HOST, NO);
+	registry.setValue(HOST, "");
 
 	for(int i = 1; i < argc; i++) {
 		string str = argv[i];
@@ -36,6 +39,17 @@ void Application::decodeParams(int argc, char* argv[]) {
 				exit(-1);
 			}
 		}
+		else if(str == VERBOSE_MODE) {
+			registry.setValue(VERBOSE, YES);
+			cout << VERBOSE_MODE " is set" << endl;
+		}
+	}
+
+	if(registry.getValue(VERBOSE) == YES) {
+		cout << MODE << ": " << registry.getValue(MODE) << endl;
+		cout << TOGGLE_TIME << " == " << registry.getValue(TOGGLE_TIME) <<endl;
+		cout << SEND_TO_HOST << " == " << registry.getValue(SEND_TO_HOST) <<endl;
+		cout << HOST << " == " << registry.getValue(HOST) <<endl;
 	}
 }
 
@@ -60,6 +74,11 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 	if(registry->getValue(MODE) == TX35_MODE)
 		initialRate = INITIAL_DATARATE_TX35;
 	int err = sensor->initializeSensor(INITIAL_FREQUENCY, initialRate);
+	if(registry->getValue(VERBOSE) == YES) {
+		cout << "initializeSensor" << endl;
+		cout << "FREQUENCY: " << INITIAL_FREQUENCY << endl;
+		cout << "DATARATE: " << initialRate << endl;
+	}
   
 	if(err != 0) {
 		return;
@@ -70,6 +89,10 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 	while(stop.empty() || stop != YES) {
 //		startClock = clock();
 		if(sensor->receiveData() == true) {
+			if(registry->getValue(VERBOSE) == YES) {
+				cout << "sensor recieved data" << endl;
+			}
+
 			sensor->setMode(RF69_MODE_STANDBY);
 			sensor->getData(received);
 			char json[1000];
@@ -78,9 +101,12 @@ void Application::collectDataFrames(RFM_SENSOR * sensor, Registry* registry, Fra
 //				cout << "try stringify frame" << endl;
 //				cout << "try add frame" << endl;
 				list->addFrame(frame);
+				Helper::stringifyFrame(frame, json);
 				if(registry->getValue(SEND_TO_HOST) == YES) {
-					Helper::stringifyFrame(frame, json);
 					RestClient::Response r = RestClient::post(registry->getValue(HOST), "application/json", json);
+				}
+				if(registry->getValue(VERBOSE) == YES) {
+					cout << json << endl;
 				}
 				frame = nullptr;
 			}

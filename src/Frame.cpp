@@ -26,7 +26,7 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 
 		frame->Header = (bytes[0] & 0xF0) >> 4;
 		if (frame->Header != 9) {
-//			cout << "wrong header " << frame->Header <<endl;
+			cout << "wrong header " << frame->Header <<endl;
 			delete frame;
 			frame = nullptr;
 		}
@@ -63,7 +63,7 @@ Frame * Frame::decodeFrame(unsigned char *bytes) {
 			frame->HumidityAbs = 216.687*dd/(273.15+frame->Temperature);
 		}
 	} else {
-//		cout << "wrong CRC" << endl;
+		cout << "wrong CRC" << endl;
 	}
   return frame;
 }
